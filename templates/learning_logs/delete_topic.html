@@ -1,0 +1,47 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block page_header %}
+  <h2>Delete topic</h2>
+{% endblock page_header %}
+
+{% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/learning_logs.css' %}">
+  <p>Are you sure you want to delete the following topic?</p>
+
+  <b><p>Warning: Deleting this topic will permanently delete all entries made on this topic.</p></b>
+
+  <form method="post" action="{% url 'learning_logs:delete_topic' topic.id %}" class="form">
+    {% csrf_token %}
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="card-columns">
+            <a href="{% url 'learning_logs:topic' topic.id %}">
+              <div class="card shadow mb-4">
+                {% if topic.image %}
+                  <img class="card-img-top img-fluid" src="{{ topic.image.url }}" alt="{{ topic.title }}">
+                {% endif %}
+                  <div class="card-body">
+                    <div style="display: flex justify-content-center; flex-direction: row">
+                      <h4 class="card-title text-center text-dark">{{ topic|linebreaks|truncatewords:4|truncatechars:30 }}</h4>
+                    </div>
+                  </div>
+                </div>
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    {% buttons %}
+      <a href="{% url 'learning_logs:topic' topic.id %}" class="btn btn-secondary">Cancel</a> 
+      &emsp;
+      <button type="submit" name="delete" value="delete" class="btn btn-danger">Delete</button>
+    {% endbuttons %}
+  </form>
+
+{% endblock content %}

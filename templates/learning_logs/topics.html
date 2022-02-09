@@ -1,0 +1,98 @@
+{% extends "learning_logs/base.html" %}
+{% load static %}
+
+{% block page_header %}
+  {% if user.is_authenticated %}
+  <h1>Topics</h1>
+  {% else %}
+  <h1>Public Topics</h1>
+  {% endif %}
+{% endblock page_header %}
+
+{% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/learning_logs.css' %}">
+{% if user.is_authenticated %}
+<p>
+  <a href="{% url 'learning_logs:new_topic' %}">Add a new topic</a>
+</p>
+  <h3> My topics </h3>
+  <br>
+{% else %}
+  <a href="{% url 'users:register' %}" role="button">Register to create your Learning Log</a>
+  <br>
+
+{% endif %}
+
+<!--Private Topics-->
+
+<div style="display: inline-block; flex-direction: column; flex-wrap: wrap">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="card-columns">
+          {% for topic in private_topics %}
+            <a href="{% url 'learning_logs:topic' topic.id %}" class="text-decoration-none">
+              <div class="card shadow mb-4">
+                {% if topic.image %}
+                  <img class="card-img-top img-fluid" src="{{ topic.image.url }}" alt="{{ topic.title }}">
+                {% endif %}
+                <div class="card-body">
+                  <div style="display: flex justify-content-center; flex-direction: row">
+                    <h4 class="card-title text-center text-dark">{{ topic|linebreaks|truncatewords:4|truncatechars:30 }}</h4>
+                  </div>
+                </div>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% if user.is_authenticated %}
+<br>
+<hr>
+<h3>Public Topics</h3>
+<br>
+{% endif %}
+
+<!--Public Topics-->
+
+<div style="display: inline-block; flex-direction: column; flex-wrap: wrap">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="card-columns">
+          {% for topic in public_topics %}
+            {% if topic.public %}
+              <a href="{% url 'learning_logs:topic' topic.id %}" class="text-decoration-none">  
+                <div class="card shadow mb-4">
+                  <div class="card-header text-dark">
+                    {% if topic.owner == request.user %}
+                      My topic
+                    {% else %}
+                      By: {{ topic.owner|truncatewords:4|truncatechars:15  }}
+                    {% endif %}
+                  </div>
+                  {% if topic.image %}
+                    <img class="card-img-top img-fluid" src="{{ topic.image.url }}" alt="{{ topic.title }}">
+                  {% endif %}
+                  <div class="card-body">
+                    <div style="display: flex justify-content-center; flex-direction: row">
+                      <h4 class="card-title text-center text-dark">{{ topic|linebreaks|truncatewords:4|truncatechars:30 }}</h4>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}

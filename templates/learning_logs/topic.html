@@ -1,0 +1,34 @@
+{% extends 'learning_logs/base.html' %}
+
+{% block page_header %}
+  <p><a href="{% url 'learning_logs:topics' %}" >&laquo; Back to topics</a></p>
+  <h2>{{ topic }}</h2>
+{% endblock page_header %}
+
+{% block content %}
+  {% if request.user == topic.owner %}
+    <p>
+      <a href="{% url 'learning_logs:new_entry' topic.id %}">New entry</a> &emsp;<a href="{% url 'learning_logs:edit_topic' topic.id %}">Edit topic</a> &emsp;
+      <a href="{% url 'learning_logs:delete_topic' topic.id %}" >Delete topic</a>
+    </p>
+  {% endif %}
+  {% for entry in entries %}
+    <div class="card mb-3">
+      <h4 class="card-header">
+        {{ entry.date_added|date:'M d, Y H:i' }}
+        {% if request.user == topic.owner %}
+          <small><small>&emsp;<a href="{% url 'learning_logs:edit_entry' entry.id %}">
+            Edit entry</a> &emsp;
+          <a href="{% url 'learning_logs:delete_entry' entry.id %}">
+            Delete entry</a></small></small>
+        {% endif %}    
+      </h4>
+      <div class="card-body">
+        {{ entry.text|linebreaks }}
+      </div>
+    </div>
+  {% empty %}
+    <p>There are no entries for this topic yet.</p>
+  {% endfor %}
+
+{% endblock content %}
