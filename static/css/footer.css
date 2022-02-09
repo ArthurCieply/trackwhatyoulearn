@@ -1,0 +1,16 @@
+footer {
+    position: flex;
+    width: 100%;
+    opacity: 0.45;
+    transition: all 0.75s ease;
+    bottom:0px;
+}
+
+.footer:hover {  
+    opacity:1.0;
+    transition-delay:0.1s;
+}
+
+img {
+    vertical-align: bottom;
+}
